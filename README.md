@@ -17,7 +17,7 @@ No es solo un sistema automático.
 
 ## 🧩 Diagramas del Sistema
 Máquina de Estados Finitos:
-imagenes/FMS/FMS.png
+![FMS](imagenes/FMS/FMS.png)
 
 
 ---
