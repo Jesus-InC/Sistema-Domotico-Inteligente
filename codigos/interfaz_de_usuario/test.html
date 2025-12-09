@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>SmartUCB Domótica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-card: #111827;
+      --primary: #22c55e;
+      --primary-soft: #22c55e22;
+      --accent: #38bdf8;
+      --danger: #ef4444;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2933;
+      --radius: 14px;
+      --shadow: 0 12px 30px rgba(0,0,0,0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+    body {
+      background: radial-gradient(circle at top, #1d283a 0, #020617 45%, #000 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: .03em;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      border: 1px solid var(--primary-soft);
+      background: #020617cc;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 2fr 1.5fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: linear-gradient(145deg, #020617ee, #020617dd);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 14px 14px 12px 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      background: #111827;
+      color: var(--text);
+      border: 1px solid #1f2937;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #022c22;
+      border-color: #16a34a;
+    }
+
+    button.primary.outline {
+      background: transparent;
+      color: var(--primary);
+      border-color: var(--primary-soft);
+    }
+
+    button.danger {
+      background: linear-gradient(135deg, #f97373, #ef4444);
+      color: #450a0a;
+      border-color: #b91c1c;
+    }
+
+    button.sm {
+      padding: 5px 9px;
+      font-size: 0.75rem;
+    }
+
+    button.full {
+      width: 100%;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .switch {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .switch input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .switch-slider {
+      width: 38px;
+      height: 20px;
+      background: #020617;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .switch-slider::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #9ca3af;
+      transition: all 0.15s ease;
+      box-shadow: 0 0 6px rgba(0,0,0,0.5);
+    }
+
+    .switch input:checked + .switch-slider {
+      background: #022c22;
+      border-color: var(--primary);
+    }
+
+    .switch input:checked + .switch-slider::after {
+      transform: translateX(16px);
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+    }
+
+    .sensor-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .sensor-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sensor-card {
+      background: #020617;
+      border-radius: 10px;
+      border: 1px solid #1f2937;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sensor-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .sensor-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .sensor-extra {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 5px;
+      border-radius: 999px;
+      background: #111827;
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid #0f172a;
+      box-shadow: 0 0 10px var(--accent);
+      cursor: pointer;
+    }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      color: var(--muted);
+    }
+
+    .badge.ok {
+      border-color: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .form-row {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 0.8rem;
+    }
+
+    .form-row label {
+      color: var(--muted);
+    }
+
+    .form-row input {
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #1f2933;
+      background: #020617;
+      color: var(--text);
+      font-size: 0.8rem;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 8px;
+    }
+
+    @media (max-width: 600px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4b5563;
+      margin-right: 4px;
+      display: inline-block;
+    }
+
+    .status-dot.ok { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+    .status-dot.err { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+
+    footer {
+      margin-top: 6px;
+      text-align: right;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <div class="title">SmartUCB · Sistema Domótico</div>
+      <div class="subtitle">Panel de control – ESP32</div>
+    </div>
+    <div class="pill">
+      <span class="pill-dot" id="status-dot"></span>
+      <span id="status-text">Conectando...</span>
+    </div>
+  </header>
+
+  <main>
+    <!-- Columna izquierda: control + modos + voice -->
+    <section class="card" id="manual-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Control Manual</div>
+          <div class="card-sub">Foco · Bomba · Ventilador</div>
+        </div>
+        <span class="badge" id="mode-badge">Modo: ?</span>
+      </div>
+
+      <div class="grid-2">
+        <!-- Foco -->
+        <div class="card" style="padding:10px;">
+          <div class="card-header">
+            <span class="card-title">Foco</span>
+            <span class="badge" id="foco-status">OFF</span>
+          </div>
+          <div class="btn-group">
+            <button class="primary sm" onclick="sendCommand('foco','ON')">Encender</button>
+            <button class="danger sm" onclick="sendCommand('foco','OFF')">Apagar</button>
+          </div>
+        </div>
+
+        <!-- Bomba -->
+        <div class="card" style="padding:10px;">
+          <div class="card-header">
+            <span class="card-title">Bomba de riego</span>
+            <span class="badge" id="bomba-status">OFF</span>
+          </div>
+          <div class="btn-group">
+            <button class="primary sm" onclick="sendCommand('bomba','ON')">Encender</button>
+            <button class="danger sm" onclick="sendCommand('bomba','OFF')">Apagar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ventilador -->
+      <div class="card" style="margin-top:10px; padding:10px;">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Ventilador</div>
+            <div class="card-sub">Encendido + velocidad PWM</div>
+          </div>
+          <span class="badge" id="vent-status">OFF</span>
+        </div>
+        <div class="btn-group" style="margin-bottom:8px;">
+          <button class="primary sm" onclick="sendCommand('vent','ON')">Encender</button>
+          <button class="danger sm" onclick="sendCommand('vent','OFF')">Apagar</button>
+        </div>
+
+        <div class="slider-wrap">
+          <input id="vent-slider" type="range" min="0" max="255" value="0" oninput="updateVentLabel(this.value)" onchange="setVentSpeed(this.value)">
+          <span style="font-size:0.8rem;"><span id="vent-val">0</span> / 255</span>
+        </div>
+      </div>
+
+      <!-- Modos -->
+      <div class="card" style="margin-top:10px; padding:10px;">
+        <div class="card-header">
+          <div class="card-title">Modos de operación</div>
+          <div class="card-sub">Manual · Auto · Smart</div>
+        </div>
+        <div class="btn-group">
+          <button id="btn-mode-manual" class="mode-btn primary outline full" onclick="setMode('manual')">Manual</button>
+          <button id="btn-mode-auto" class="mode-btn primary outline full" onclick="setMode('auto')">Auto</button>
+          <button id="btn-mode-smart" class="mode-btn primary outline full" onclick="setMode('smart')">Smart</button>
+        </div>
+      </div>
+
+      <!-- Asistente de voz -->
+      <div class="card" style="margin-top:10px; padding:10px;">
+        <div class="card-header">
+          <div class="card-title">Asistente de voz</div>
+          <div class="card-sub">Control por comandos hablados (vía broker)</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="voice-toggle" onchange="toggleVoice(this.checked)">
+          <span class="switch-slider"></span>
+          <span id="voice-label">Desactivado</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Columna derecha: sensores + WiFi + Telegram -->
+    <section class="card">
+      <!-- Sensores -->
+      <div class="card-header">
+        <div>
+          <div class="card-title">Lectura de sensores</div>
+          <div class="card-sub">DHT22 · FC-28</div>
+        </div>
+        <span class="badge ok" id="sens-freq">Auto: cada 3 s</span>
+      </div>
+
+      <div class="sensor-grid">
+        <div class="sensor-card">
+          <div class="sensor-label">Temperatura</div>
+          <div class="sensor-value" id="temp-val">-- °C</div>
+          <div class="sensor-extra" id="temp-extra">Setpoint: 25 °C</div>
+        </div>
+        <div class="sensor-card">
+          <div class="sensor-label">Humedad relativa</div>
+          <div class="sensor-value" id="hum-val">-- %</div>
+          <div class="sensor-extra">DHT22</div>
+        </div>
+        <div class="sensor-card">
+          <div class="sensor-label">Humedad de suelo</div>
+          <div class="sensor-value" id="soil-val">-- %</div>
+          <div class="sensor-extra" id="soil-extra">FC-28</div>
+        </div>
+      </div>
+
+      <div class="status-bar">
+        <span><span class="status-dot ok"></span>Auto-refresh sensores</span>
+        <span id="last-update">Última actualización: --</span>
+      </div>
+
+      <hr style="border:none;border-top:1px solid #111827;margin:12px 0;">
+
+      <!-- Config WiFi / Telegram -->
+      <div class="card-header">
+        <div>
+          <div class="card-title">Configuración avanzada</div>
+          <div class="card-sub">Wi-Fi + Notificaciones Telegram</div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-bottom:8px;">
+        <!-- WiFi -->
+        <div class="card" style="padding:10px;">
+          <div class="card-header">
+            <span class="card-title">Wi-Fi</span>
+          </div>
+          <div class="form-row">
+            <label for="wifi-ssid">SSID</label>
+            <input id="wifi-ssid" placeholder="Nombre de la red">
+          </div>
+          <div class="form-row" style="margin-top:4px;">
+            <label for="wifi-pass">Contraseña</label>
+            <input id="wifi-pass" type="password" placeholder="********">
+          </div>
+          <button class="primary sm full" style="margin-top:6px;" onclick="saveWiFi()">Guardar Wi-Fi</button>
+          <button class="sm full" style="margin-top:4px;" onclick="forgetWiFi()">Olvidar credenciales</button>
+        </div>
+
+        <!-- Telegram -->
+        <div class="card" style="padding:10px;">
+          <div class="card-header">
+            <span class="card-title">Telegram</span>
+          </div>
+          <div class="form-row">
+            <label for="tg-token">Bot Token</label>
+            <input id="tg-token" placeholder="123456:ABC-DEF...">
+          </div>
+          <div class="form-row" style="margin-top:4px;">
+            <label for="tg-chat">Chat ID</label>
+            <input id="tg-chat" placeholder="123456789">
+          </div>
+          <label class="switch" style="margin-top:6px;">
+            <input type="checkbox" id="tg-enabled">
+            <span class="switch-slider"></span>
+            <span>Notificaciones activas</span>
+          </label>
+          <button class="primary sm full" style="margin-top:6px;" onclick="saveTelegram()">Guardar Telegram</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    SmartUCB · ESP32 · MQTT · Web UI
+  </footer>
+</div>
+
+<script>
+  const API_BASE = ""; // mismo host
+
+  function setStatus(text, ok = true) {
+    document.getElementById("status-text").textContent = text;
+    const dot = document.getElementById("status-dot");
+    dot.className = "pill-dot";
+    if (!ok) {
+      dot.style.background = "#ef4444";
+      dot.style.boxShadow = "0 0 12px #ef4444";
+    } else {
+      dot.style.background = "#22c55e";
+      dot.style.boxShadow = "0 0 12px #22c55e";
+    }
+  }
+
+  function updateVentLabel(val) {
+    document.getElementById("vent-val").textContent = val;
+  }
+
+  function sendCommand(device, action) {
+    // Sólo manda la orden; la ESP32 se encarga de validar modo MANUAL, etc.
+    fetch(`${API_BASE}/api/cmd?dev=${device}&action=${action}`)
+      .then(r => r.json())
+      .then(j => {
+        if (!j.ok) throw new Error(j.msg || "Error");
+        refreshState();
+      })
+      .catch(e => {
+        console.error(e);
+        setStatus("Error enviando comando", false);
+      });
+  }
+
+  function setVentSpeed(val) {
+    fetch(`${API_BASE}/api/vent_speed?value=${val}`)
+      .then(r => r.json())
+      .then(j => {
+        if (!j.ok) throw new Error(j.msg || "Error");
+        refreshState();
+      })
+      .catch(e => {
+        console.error(e);
+        setStatus("Error cambiando velocidad", false);
+      });
+  }
+
+  function setMode(mode) {
+    fetch(`${API_BASE}/api/mode?set=${mode}`)
+      .then(r => r.json())
+      .then(j => {
+        if (!j.ok) throw new Error(j.msg || "Error");
+        refreshState();
+      })
+      .catch(e => {
+        console.error(e);
+        setStatus("Error cambiando modo", false);
+      });
+  }
+
+  function toggleVoice(enabled) {
+    const val = enabled ? 1 : 0;
+    fetch(`${API_BASE}/api/voice?enabled=${val}`)
+      .then(r => r.json())
+      .then(j => {
+        if (!j.ok) throw new Error(j.msg || "Error");
+        document.getElementById("voice-label").textContent = enabled ? "Activado" : "Desactivado";
+      })
+      .catch(e => {
+        console.error(e);
+        setStatus("Error con asistente de voz", false);
+      });
+  }
+
+  function saveWiFi() {
+    const ssid = document.getElementById("wifi-ssid").value.trim();
+    const pass = document.getElementById("wifi-pass").value;
+    fetch(`${API_BASE}/api/wifi`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({ssid, pass})
+    })
+    .then(r => r.json())
+    .then(j => {
+      if (!j.ok) throw new Error(j.msg || "Error");
+      setStatus("Wi-Fi guardado (reinicia si es necesario)", true);
+    })
+    .catch(e => {
+      console.error(e);
+      setStatus("Error guardando Wi-Fi", false);
+    });
+  }
+
+  function forgetWiFi() {
+    fetch(`${API_BASE}/api/wifi_forget`, {method:"POST"})
+      .then(r => r.json())
+      .then(j => {
+        if (!j.ok) throw new Error(j.msg || "Error");
+        setStatus("Credenciales Wi-Fi borradas", true);
+      })
+      .catch(e => {
+        console.error(e);
+        setStatus("Error borrando Wi-Fi", false);
+      });
+  }
+
+  function saveTelegram() {
+    const token = document.getElementById("tg-token").value.trim();
+    const chat  = document.getElementById("tg-chat").value.trim();
+    const enabled = document.getElementById("tg-enabled").checked ? 1 : 0;
+    fetch(`${API_BASE}/api/telegram`, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({token, chat, enabled})
+    })
+    .then(r => r.json())
+    .then(j => {
+      if (!j.ok) throw new Error(j.msg || "Error");
+      setStatus("Config Telegram guardada", true);
+    })
+    .catch(e => {
+      console.error(e);
+      setStatus("Error guardando Telegram", false);
+    });
+  }
+
+  function applyModeUI(mode) {
+    const badge = document.getElementById("mode-badge");
+    badge.textContent = "Modo: " + mode.toUpperCase();
+
+    ["manual","auto","smart"].forEach(m => {
+      const btn = document.getElementById("btn-mode-" + m);
+      if (btn) btn.classList.toggle("active", m === mode);
+    });
+  }
+
+  function refreshState() {
+    fetch(`${API_BASE}/api/state`)
+      .then(r => r.json())
+      .then(s => {
+        // estados
+        document.getElementById("foco-status").textContent   = s.foco;
+        document.getElementById("bomba-status").textContent  = s.bomba;
+        document.getElementById("vent-status").textContent   = s.vent;
+        document.getElementById("vent-slider").value         = s.vent_speed;
+        updateVentLabel(s.vent_speed || 0);
+
+        // modo
+        applyModeUI(s.mode || "manual");
+
+        // voice
+        const v = !!s.voice_enabled;
+        document.getElementById("voice-toggle").checked = v;
+        document.getElementById("voice-label").textContent = v ? "Activado" : "Desactivado";
+
+        // sensores
+        document.getElementById("temp-val").textContent = (s.temp ?? "--") + " °C";
+        document.getElementById("hum-val").textContent  = (s.hum ?? "--") + " %";
+        document.getElementById("soil-val").textContent = (s.soil ?? "--") + " %";
+
+        document.getElementById("temp-extra").textContent = "Setpoint: " + (s.temp_sp ?? 25) + " °C";
+        document.getElementById("soil-extra").textContent = "Setpoint: " + (s.soil_sp ?? 30) + " %";
+
+        // config (si el backend la envía)
+        if (s.wifi_ssid !== undefined) {
+          document.getElementById("wifi-ssid").value = s.wifi_ssid || "";
+        }
+        if (s.tg_token !== undefined) {
+          document.getElementById("tg-token").value = s.tg_token || "";
+        }
+        if (s.tg_chat !== undefined) {
+          document.getElementById("tg-chat").value = s.tg_chat || "";
+        }
+        if (s.tg_enabled !== undefined) {
+          document.getElementById("tg-enabled").checked = !!s.tg_enabled;
+        }
+
+        const now = new Date();
+        document.getElementById("last-update").textContent =
+          "Última actualización: " + now.toLocaleTimeString();
+
+        setStatus("Conectado", true);
+      })
+      .catch(e => {
+        console.error(e);
+        setStatus("Sin conexión con ESP32", false);
+      });
+  }
+
+  // Polling de estado cada 3 s
+  setInterval(refreshState, 3000);
+  window.addEventListener("load", () => {
+    refreshState();
+  });
+</script>
+</body>
+</html>
