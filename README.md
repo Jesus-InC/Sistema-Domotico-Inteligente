@@ -21,6 +21,15 @@ Máquina de Estados Finitos:
 
 
 ---
+##🪄Diseño de la PCB
+Diagrama esquemático del circuito:
+![D.Esquemático](docs/pcb/imagenes/DEsquematico.jpg)
+
+Ruteo de la PCB:
+![Ruteado de la PCB](docs/pcb/imagenes/Ruteo.jpeg)
+
+---
+
 ## 🛠 Tecnologías Utilizadas
 
 ### **Hardware**
@@ -40,7 +49,7 @@ Máquina de Estados Finitos:
 - **NLTK** (procesamiento de lenguaje natural)
 - **Arduino IDE** (ESP32 firmware)
 - **Mosquitto / MQTT**
-- **Google Assistant / IFTTT (concepto de integración por voz)**
+- **KiCad**
 
 ---
 
@@ -59,25 +68,20 @@ Máquina de Estados Finitos:
 - [x] Integración básica de sensores  
 - [x] Comunicación MQTT implementada  
 - [x] Control inicial de ventilador y bomba  
+- [x] Control de velocidad del ventilador 
 - [x] Creación de dataset de prueba (CSV)  
 - [x] Implementación de modelos (regresión y clasificación) como plantillas  
 - [x] Diseño de FSM y diagramas  
 - [x] Investigación de control por voz  
 - [x] Módulo NLP preliminar  
 - [x] Documentación inicial
-
-### ⏳ En desarrollo
-- [ ] Integración del modelo IA final  
-- [ ] Entrenamiento con dataset real  
-- [ ] Control inteligente de ventilación y riego  
-- [ ] Notificaciones al celular  
-- [ ] PCB funcional  
-- [ ] Dashboard de monitoreo
+- [x] Integración del modelo IA final  
+- [x] Control inteligente de ventilación y riego  
+- [x] Notificaciones al celular  
+- [x] Diseño de la PCB   
+- [x] Dashboard de monitoreo
 
 ### 🔮 Próximos pasos
-- [ ] Optimización de modelos  
-- [ ] Pruebas completas en entorno real  
 - [ ] Versión final de PCB  
-- [ ] Presentación final del proyecto  
-
----
+- [ ] Presentación final del proyecto
+- [ ] Control de luminosidad AC (circuito dimmer)
