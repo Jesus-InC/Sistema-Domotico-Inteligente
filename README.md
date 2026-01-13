@@ -152,7 +152,7 @@ Ejemplo:
 ```text
 Conectado a WiFi
 IP local: 192.168.1.45
-
+```
 Desde cualquier dispositivo conectado a la misma red, accede a:
 http://192.168.1.45
 

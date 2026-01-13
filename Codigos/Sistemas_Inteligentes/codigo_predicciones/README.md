@@ -95,6 +95,7 @@ modelo_usuario.pkl
 scaler_usuario.pkl
 modelo_lluvia.pkl
 scaler_lluvia.pkl
+```
 
 Estos archivos son utilizados posteriormente para generar predicciones sin necesidad de reentrenar los modelos.
 
