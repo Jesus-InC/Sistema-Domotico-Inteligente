@@ -11,9 +11,8 @@
 // ======================================================
 //                TELEGRAM (HARDCODE)
 // ======================================================
-// Ya con tus datos reales:
-#define TG_BOT_TOKEN   "8565394779:AAFmbz6J74HF0vUDsxp50SfPa4aesRFflU4"
-#define TG_CHAT_ID     "7520466083"
+#define TG_BOT_TOKEN   ""
+#define TG_CHAT_ID     ""
 
 // Función global para enviar mensajes a Telegram
 bool tg_send(const String &msg);
